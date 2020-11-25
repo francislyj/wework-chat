@@ -1,0 +1,31 @@
+{
+  "name": "wework-chat",
+  "version": "1.0.0",
+  "description": "wework chat node version",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/francislyj/wechat-chat-node.git"
+  },
+  "keywords": [
+    "wechat",
+    "wework",
+    "chat",
+    "nodejs"
+  ],
+  "author": "yijun.liu",
+  "license": "ISC",
+  "dependencies": {
+    "java": "^0.12.1"
+  },
+  "bugs": {
+    "url": "https://github.com/francislyj/wework-chat-node/issues"
+  },
+  "homepage": "https://github.com/francislyj/wework-chat-node#readme"
+}
