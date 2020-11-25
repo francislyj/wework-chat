@@ -1,8 +1,10 @@
-const java = require("java"); //引入nodejs的java模块
+const java = require("java");
 const path = require('path');
 
+const jdkPath = path.join(__dirname, "jar", "java_sdk.jar");
+
 java.options.push('-Djava.library.path=' + path.join(__dirname, 'lib'));
-java.classpath.push("./java_sdk.jar"); //导入编写的jar包
+java.classpath.push(jdkPath);
 
 const Finance = java.import('com.tencent.wework.Finance'); //package.class
 
