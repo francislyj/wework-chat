@@ -7,7 +7,7 @@
 ```
 npm install wework-chat
 ```
-如果需要升级企业微信SDK,请更新 lib/libWeWorkFinanceSdk_Java.so 以及 jar/java_sdk.jar。
+如果需要升级企业微信SDK,请更新 lib/libWeWorkFinanceSdk_Java.so 以及 java_sdk.jar。
 本模块也会持续更新优化。
 
 ##### Compiling
