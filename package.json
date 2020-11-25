@@ -1,6 +1,6 @@
 {
   "name": "wework-chat",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "wework chat node version",
   "main": "index.js",
   "directories": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/francislyj/wechat-chat-node.git"
+    "url": "git+https://github.com/francislyj/wework-node.git"
   },
   "keywords": [
     "wechat",
@@ -25,7 +25,7 @@
     "java": "^0.12.1"
   },
   "bugs": {
-    "url": "https://github.com/francislyj/wework-chat-node/issues"
+    "url": "https://github.com/francislyj/wework-chat/issues"
   },
-  "homepage": "https://github.com/francislyj/wework-chat-node#readme"
+  "homepage": "https://github.com/francislyj/wework-chat#readme"
 }
