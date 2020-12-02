@@ -31,22 +31,51 @@ const init = async function(corpid, secret){
     }
 };
 
+const getPrivateKey = function(publickey_ver, keyMap){
+    return keyMap[publickey_ver];
+};
 
-const getChatData = async function(seq, limit, proxy, passwd, timeout) {
-    try{
-        //每次使用GetChatData拉取存档前需要调用NewSlice获取一个slice，在使用完slice中数据后，还需要调用FreeSlice释放。
-        let slice = await newSlice();
-        let ret = Finance.GetChatDataSync(sdk, seq, limit, proxy, passwd, timeout, slice);
-        if (ret != 0) {
-            await freeSlice(slice);
-            throw new Error('get chat data error: ret' + ret);
-        }
-        let result = Finance.GetContentFromSliceSync(slice);
-        await freeSlice(slice);
-        return result;
-    }catch(error){
-        throw error;
+/**
+ * 拉取回话内容
+ * params: keyMap 私钥键值对{version, privateKey} 需采用RSA PKCS1秘钥
+ * */
+const getChatData = async function(seq, limit, proxy, passwd, timeout, keyMap) {
+    if(!keyMap){
+        throw new Error("param keyMap must not be null");
+
     }
+    seq = seq || 0;
+    limit = limit || 10;
+    timeout = timeout || 20;
+
+    //每次使用GetChatData拉取存档前需要调用NewSlice获取一个slice，在使用完slice中数据后，还需要调用FreeSlice释放。
+    let slice = await newSlice();
+    let ret = Finance.GetChatDataSync(sdk, seq, limit, proxy, passwd, timeout, slice);
+    if (ret != 0) {
+        await freeSlice(slice);
+        throw new Error('get chat data error: ret' + ret);
+    }
+    let result = Finance.GetContentFromSliceSync(slice);
+    await freeSlice(slice);
+
+    result = JSON.parse(result);
+    if(result.errcode == 0){
+        const chatdatas = result.chatdata;
+
+        for(let chatdata of chatdatas){
+            try{
+                let privateKey = getPrivateKey(chatdata.publickey_ver, keyMap);
+                if(!!privateKey){
+                    let encrypt_key = await decryptRSA(privateKey, chatdata.encrypt_random_key);
+                    let content = await decryptData(encrypt_key, chatdata.encrypt_chat_msg);
+                    chatdata.content = JSON.parse(content);
+                }
+            }catch(error){
+                console.log('chat decrypt error:', error);
+            }
+        }
+    }
+    return result;
 };
 
 const decryptRSA = async function(privateKey, ncrypt_random_key){
@@ -105,7 +134,5 @@ const getMediaData = async function(sdkfileid, proxy, passwd, timeout, savefile)
 module.exports = {
     init,
     getChatData,
-    decryptData,
     getMediaData,
-    decryptRSA
 };
