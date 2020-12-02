@@ -18,7 +18,22 @@ npm install wework-chat
 
 ```javascript
 
-const Chat = require('wework-chat');
+const {
+    init,
+    getChatData,
+    getMediaData,
+} = require("wework-chat");
+
+
+// keyMap 私钥键值对{version, privateKey} 需采用RSA PKCS1秘钥 
+const keyMap = {"1":"-----BEGIN RSA PRIVATE KEY----- ...... -----END RSA PRIVATE KEY-----"};
+
+const test = async function (seq, limit, proxy, passwd, timeout) {
+    await init(corpid, secret);
+    let result = await getChatData(seq, limit, proxy, passwd, timeout, keyMap);
+};
+
+test(0, 100, null, null, 20);
 
 ```
 
