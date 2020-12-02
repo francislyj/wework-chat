@@ -2,13 +2,15 @@ const java = require("java");
 const path = require('path');
 const fs = require('fs');
 
-const jdkPath = path.join(__dirname, "jar", "java_sdk.jar");
+const weworkJdkPath = path.join(__dirname, "jar", "java_sdk.jar");
+const rsaPath = path.join(__dirname, "jar", "rsa.jar");
 
 java.options.push('-Djava.library.path=' + path.join(__dirname, 'lib'));
-java.classpath.push(jdkPath);
+java.classpath.push(weworkJdkPath);
+java.classpath.push(rsaPath);
 
 const Finance = java.import('com.tencent.wework.Finance');
-const RSAUtil = java.import('com.tencent.wework.RSAUtil')
+const RSAUtil = java.import('org.francislyj.RSAUtil');
 
 
 
