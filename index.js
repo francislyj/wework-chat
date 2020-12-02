@@ -42,8 +42,15 @@ const getPrivateKey = function(publickey_ver, keyMap){
 const getChatData = async function(seq, limit, proxy, passwd, timeout, keyMap) {
     if(!keyMap){
         throw new Error("param keyMap must not be null");
-
     }
+
+    for(let version in keyMap){
+        let value = keyMap[version];
+        if(value.indexOf("BEGIN RSA PRIVATE KEY") < 0){
+            throw new Error("private key must be rsa pkcs1");
+        }
+    }
+
     seq = seq || 0;
     limit = limit || 10;
     timeout = timeout || 20;
