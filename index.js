@@ -7,7 +7,8 @@ const jdkPath = path.join(__dirname, "jar", "java_sdk.jar");
 java.options.push('-Djava.library.path=' + path.join(__dirname, 'lib'));
 java.classpath.push(jdkPath);
 
-const Finance = java.import('com.tencent.wework.Finance'); //package.class
+const Finance = java.import('com.tencent.wework.Finance');
+const RSAUtil = java.import('com.tencent.wework.RSAUtil')
 
 
 
@@ -46,6 +47,12 @@ const getChatData = async function(seq, limit, proxy, passwd, timeout) {
     }catch(error){
         throw error;
     }
+};
+
+const decryptRSA = async function(privateKey, ncrypt_random_key){
+    let privateKeyObj  = RSAUtil.getPrivateKeySync(privateKey);
+    let str  = RSAUtil.decryptRSASync(ncrypt_random_key, privateKeyObj);
+    return str;
 };
 
 const decryptData = async function(encrypt_key, encrypt_chat_msg){
@@ -99,5 +106,6 @@ module.exports = {
     init,
     getChatData,
     decryptData,
-    getMediaData
+    getMediaData,
+    decryptRSA
 };
