@@ -21,9 +21,9 @@ class WeworkSdk {
 
     constructor(corpid, secret){
         this.sdk = Finance.NewSdkSync();
-        let ret = Finance.InitSync(sdk, corpid, secret);
+        let ret = Finance.InitSync(this.sdk, corpid, secret);
         if(ret != 0){
-            Finance.DestroySdkSync(sdk);
+            Finance.DestroySdkSync(this.sdk);
             throw new Error('sdk init failed ret:' + ret);
         }
     }
@@ -111,7 +111,7 @@ class WeworkSdk {
         while(true){
             //每次使用GetMediaData拉取存档前需要调用NewMediaData获取一个media_data，在使用完media_data中数据后，还需要调用FreeMediaData释放。
             let media_data = Finance.NewMediaDataSync();
-            let ret = Finance.GetMediaDataSync(sdk, indexbuf, sdkfileid, proxy, passwd, timeout, media_data);
+            let ret = Finance.GetMediaDataSync(this.sdk, indexbuf, sdkfileid, proxy, passwd, timeout, media_data);
             if(ret!=0){
                 Finance.FreeMediaDataSync(media_data);
                 throw new Error('get media data error ret' + ret);
