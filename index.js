@@ -116,11 +116,11 @@ class WeworkSdk {
                 Finance.FreeMediaDataSync(media_data);
                 throw new Error('get media data error ret' + ret);
             }
-            console.log(`getmediadata outindex len:%d, data_len:%d, is_finis:%d`,Finance.GetIndexLen(media_data),Finance.GetDataLen(media_data), Finance.IsMediaDataFinish(media_data));
+            console.log(`getmediadata outindex len:%d, data_len:%d, is_finis:%d`,Finance.GetIndexLenSync(media_data),Finance.GetDataLenSync(media_data), Finance.IsMediaDataFinishSync(media_data));
             try {
                 let ws = fs.createWriteStream(savefile,{ 'flags': 'a' });
                 let data = Finance.GetDataSync(media_data);
-                ws.write(data);
+                ws.write(Buffer.from(data));
                 ws.end();
                 // fs.writeFileSync(savefile, );
             } catch (error) {
