@@ -118,8 +118,11 @@ class WeworkSdk {
             }
             console.log(`getmediadata outindex len:%d, data_len:%d, is_finis:%d`,Finance.GetIndexLen(media_data),Finance.GetDataLen(media_data), Finance.IsMediaDataFinish(media_data));
             try {
-                //大于512k的文件会分片拉取，此处需要使用追加写，避免后面的分片覆盖之前的数据。
-                fs.writeFileSync(savefile, Finance.GetDataSync(media_data));
+                let ws = fs.createWriteStream(savefile,{ 'flags': 'a' });
+                let data = Finance.GetDataSync(media_data);
+                ws.write(data);
+                ws.end();
+                // fs.writeFileSync(savefile, );
             } catch (error) {
                 console.log('wirie file error ====>', error);
             }
