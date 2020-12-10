@@ -104,7 +104,7 @@ class WeworkSdk {
         Finance.FreeSliceSync(slice);
     };
 
-    async getMediaData(sdkfileid, proxy, passwd, timeout, savefile){
+    async getMediaData(sdkfileid, proxy, passwd, timeout, handleBuffer){
         //媒体文件每次拉取的最大size为512k，因此超过512k的文件需要分片拉取。若该文件未拉取完整，sdk的IsMediaDataFinish接口会返回0，同时通过GetOutIndexBuf接口返回下次拉取需要传入GetMediaData的indexbuf。
         //indexbuf一般格式如右侧所示，”Range:bytes=524288-1048575“，表示这次拉取的是从524288到1048575的分片。单个文件首次拉取填写的indexbuf为空字符串，拉取后续分片时直接填入上次返回的indexbuf即可。
         let indexbuf = "";
@@ -118,15 +118,15 @@ class WeworkSdk {
             }
             console.log(`getmediadata outindex len:%d, data_len:%d, is_finis:%d`,Finance.GetIndexLenSync(media_data),Finance.GetDataLenSync(media_data), Finance.IsMediaDataFinishSync(media_data));
             try {
-                let ws = fs.createWriteStream(savefile,{ 'flags': 'a' });
-                let data = Finance.GetDataSync(media_data);
-                ws.write(Buffer.from(data));
-                ws.end();
-                // fs.writeFileSync(savefile, );
+                let buffer = Finance.GetDataSync(media_data);
+                console.log('=======> buffer.length:', buffer.length);
+                // let buffer = Buffer.from(data);
+                let isFinish = Finance.IsMediaDataFinishSync(media_data) == 1;
+                await handleBuffer(buffer, isFinish);
+                buffer = null;
             } catch (error) {
                 console.log('wirie file error ====>', error);
             }
-
             if(Finance.IsMediaDataFinishSync(media_data) == 1) {
                 //已经拉取完成最后一个分片
                 Finance.FreeMediaDataSync(media_data);
@@ -136,6 +136,7 @@ class WeworkSdk {
                 indexbuf = Finance.GetOutIndexBufSync(media_data);
                 Finance.FreeMediaDataSync(media_data);
             }
+            media_data = null;
         }
     };
 }
