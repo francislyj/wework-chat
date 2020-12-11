@@ -30,7 +30,6 @@ class WeworkSdk {
             Finance.DestroySdkSync(this.sdk);
         }
         this.sdk = Finance.NewSdkSync();
-        this.secret = secret;
         let ret = Finance.InitSync(this.sdk, this.corpid, this.secret);
         console.log('init sdk ret ===>', ret);
         if(ret != 0){
