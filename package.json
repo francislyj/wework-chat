@@ -1,6 +1,6 @@
 {
   "name": "wework-chat",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "wework chat node version",
   "main": "index.js",
   "directories": {

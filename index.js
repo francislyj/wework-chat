@@ -1,6 +1,5 @@
 const java = require("java");
 const path = require('path');
-const fs = require('fs');
 
 const weworkJdkPath = path.join(__dirname, "jar", "java_sdk.jar");
 const rsaPath = path.join(__dirname, "jar", "rsa.jar");
@@ -20,8 +19,19 @@ const getPrivateKey = function(publickey_ver, keyMap){
 class WeworkSdk {
 
     constructor(corpid, secret){
+        this.corpid = corpid;
+        this.secret = secret;
+        this.initSdk();
+    }
+
+    initSdk() {
+        console.log('init sdk begin ====>');
+        if(this.sdk){
+            Finance.DestroySdkSync(this.sdk);
+        }
         this.sdk = Finance.NewSdkSync();
-        let ret = Finance.InitSync(this.sdk, corpid, secret);
+        this.secret = secret;
+        let ret = Finance.InitSync(this.sdk, this.corpid, this.secret);
         console.log('init sdk ret ===>', ret);
         if(ret != 0){
             Finance.DestroySdkSync(this.sdk);
@@ -29,9 +39,6 @@ class WeworkSdk {
         }
     }
 
-    async destroy(){
-        Finance.DestroySdkSync(this.sdk);
-    }
 
     async decryptData(encrypt_key, encrypt_chat_msg){
         let msg = await this.newSlice();
@@ -49,7 +56,14 @@ class WeworkSdk {
      * 拉取回话内容
      * params: keyMap 私钥键值对{version, privateKey} 需采用RSA PKCS1秘钥
      * */
-    async getChatData(seq, limit, proxy, passwd, timeout, keyMap) {
+    async getChatData(seq, limit, proxy, passwd, timeout, keyMap, secret) {
+
+        if(!!secret && secret != this.secret){
+            console.log('reinit sdk =======>');
+            this.secret = secret;
+            this.initSdk();
+        }
+
         if(!keyMap){
             throw new Error("param keyMap must not be null");
         }
