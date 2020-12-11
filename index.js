@@ -22,10 +22,15 @@ class WeworkSdk {
     constructor(corpid, secret){
         this.sdk = Finance.NewSdkSync();
         let ret = Finance.InitSync(this.sdk, corpid, secret);
+        console.log('init sdk ret ===>', ret);
         if(ret != 0){
             Finance.DestroySdkSync(this.sdk);
             throw new Error('sdk init failed ret:' + ret);
         }
+    }
+
+    async destroy(){
+        Finance.DestroySdkSync(this.sdk);
     }
 
     async decryptData(encrypt_key, encrypt_chat_msg){
