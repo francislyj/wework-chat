@@ -122,7 +122,12 @@ class WeworkSdk {
         Finance.FreeSliceSync(slice);
     };
 
-    async getMediaData(sdkfileid, proxy, passwd, timeout, handleBuffer){
+    async getMediaData(sdkfileid, proxy, passwd, timeout, handleBuffer, secret){
+        if(!!secret && secret != this.secret){
+            console.log('reinit sdk =======>');
+            this.secret = secret;
+            this.initSdk();
+        }
         //媒体文件每次拉取的最大size为512k，因此超过512k的文件需要分片拉取。若该文件未拉取完整，sdk的IsMediaDataFinish接口会返回0，同时通过GetOutIndexBuf接口返回下次拉取需要传入GetMediaData的indexbuf。
         //indexbuf一般格式如右侧所示，”Range:bytes=524288-1048575“，表示这次拉取的是从524288到1048575的分片。单个文件首次拉取填写的indexbuf为空字符串，拉取后续分片时直接填入上次返回的indexbuf即可。
         let indexbuf = "";
