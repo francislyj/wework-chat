@@ -25,13 +25,11 @@ class WeworkSdk {
     }
 
     initSdk() {
-        console.log('init sdk begin ====>');
         if(this.sdk){
             Finance.DestroySdkSync(this.sdk);
         }
         this.sdk = Finance.NewSdkSync();
         let ret = Finance.InitSync(this.sdk, this.corpid, this.secret);
-        console.log('init sdk ret ===>', ret);
         if(ret != 0){
             Finance.DestroySdkSync(this.sdk);
             throw new Error('sdk init failed ret:' + ret);
@@ -58,7 +56,6 @@ class WeworkSdk {
     async getChatData(seq, limit, proxy, passwd, timeout, keyMap, secret) {
 
         if(!!secret && secret != this.secret){
-            console.log('reinit sdk =======>');
             this.secret = secret;
             this.initSdk();
         }
@@ -124,7 +121,6 @@ class WeworkSdk {
 
     async getMediaData(sdkfileid, proxy, passwd, timeout, handleBuffer, secret){
         if(!!secret && secret != this.secret){
-            console.log('reinit sdk =======>');
             this.secret = secret;
             this.initSdk();
         }
